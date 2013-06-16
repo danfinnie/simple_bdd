@@ -17,7 +17,7 @@ Or install it yourself as:
 
     $ gem install simple_bdd
 
-## Usage
+## Basic Usage
 
 The following will call the 'something_happens' method in scope of the current class or module.  
 
@@ -25,6 +25,49 @@ The following will call the 'something_happens' method in scope of the current c
 	[Ww]hen "this happens" # calls this_happens
 	[Tt]hen "this change occurs" #calls this_change_occurs
 	[Aa]nd "this other side effect happens" #this_other_side_effect_happens
+
+## Named Noun Usage
+
+The named nouns feature lets you write more general functions to handle multiple
+SimpleBDD test directives.
+
+First, you set up your named nouns:
+
+``` let_named!(:snape, :professor, FactoryGirl.create(:professor, name: 'Severus Snape')) ```
+
+Then, when you use the word "Snape" in a test directive, SimpleBDD will look for methods matching
+"snape" or methods matching "professor."  For instance:
+
+```
+describe MyClass do
+    let_named!(:apple, :fruit, Apple.new)
+    let_named!(:strawberry, :fruit, Strawberry.new)
+
+    it "Apples burn strawberries" do
+        Given "Apple is on fire" # calls apple_is_on_fire
+        Then "Strawberry gets burned" # calls fruit_gets_burned
+    end
+
+    it "Strawberries burn strawberries" do
+        Given "Strawberry is on fire" # calls fruit_is_on_fire
+        Then "Strawberry gets burned" # calls fruit_gets_burned
+    end
+
+    def apple_is_on_fire
+        # ...
+    end
+
+    # Take an options hash to see the named_nouns that
+    # were passed to your method.
+    def fruit_is_on_fire opts
+        opts # => {fruit: <Strawberry>}
+    end
+
+    def fruit_gets_burned
+        # ...
+    end
+end
+```
 	
 ## RSpec
 
