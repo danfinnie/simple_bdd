@@ -12,22 +12,24 @@ module SimpleBdd
 
     private
 
-    def generalize(arr)
-      if arr.nil? || arr.empty?
+    def generalize(term_list)
+      if term_list.nil? || term_list.empty?
         yield []
         return
       end
 
-      idx_generalize = arr.find_index { |term| @generalizations.has_key? term.to_sym }
+      idx_generalize = term_list.find_index { |term| @generalizations.has_key? term.to_sym }
 
-      first_bit = arr[0...idx_generalize]
-      second_bit = arr[(idx_generalize+1)..-1]
-      term = arr[idx_generalize]
+      pre_term, term, post_term = split_array(term_list, idx_generalize)
       generalized_term = @generalizations[term.to_sym]
-      generalize(second_bit) do |generalized_second_bit|
-        yield first_bit + [term] + generalized_second_bit
-        yield first_bit + [generalized_term] + generalized_second_bit
+      generalize(post_term) do |generalized_post_term|
+        yield pre_term + [term] + generalized_post_term
+        yield pre_term + [generalized_term] + generalized_post_term
       end
+    end
+
+    def split_array(arr, idx)
+      [arr[0...idx], arr[idx], arr[(idx+1)..-1]]
     end
   end
 end
