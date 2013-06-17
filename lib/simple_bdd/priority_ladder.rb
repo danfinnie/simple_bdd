@@ -31,17 +31,19 @@ module SimpleBdd
         term_1 = @specific_array[i]
         generalization_1 = @generalizations[term_1.to_sym]
 
-        (i+1).upto(@specific_array.size-1).map do |j|
-          term_2 = @specific_array[j]
-          generalization_2 = @generalizations[term_2.to_sym]
-          if generalization_1 && generalization_2
-            @specific_array[0...i] +
-              [generalization_1] +
-              @specific_array[(i+1)...j] +
-              [generalization_2] +
-              @specific_array[(j+1)..-1]
-          else
-            nil
+        if generalization_1
+          first_part = @specific_array[0...i] + [generalization_1]
+          (i+1).upto(@specific_array.size-1).map do |j|
+            term_2 = @specific_array[j]
+            generalization_2 = @generalizations[term_2.to_sym]
+            if generalization_2
+                first_part + 
+                @specific_array[(i+1)...j] +
+                [generalization_2] +
+                @specific_array[(j+1)..-1]
+            else
+              nil
+            end
           end
         end
       end
