@@ -12,9 +12,9 @@ module SimpleBdd
 
     private
 
-    def generalize(arr, &blk)
+    def generalize(arr)
       if arr.nil? || arr.empty?
-        blk[[]]
+        yield []
         return
       end
 
@@ -25,8 +25,8 @@ module SimpleBdd
       term = arr[idx_generalize]
       generalized_term = @generalizations[term.to_sym]
       generalize(second_bit) do |generalized_second_bit|
-        blk[first_bit + [term] + generalized_second_bit]
-        blk[first_bit + [generalized_term] + generalized_second_bit]
+        yield first_bit + [term] + generalized_second_bit
+        yield first_bit + [generalized_term] + generalized_second_bit
       end
     end
   end
