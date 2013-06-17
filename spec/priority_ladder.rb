@@ -18,5 +18,11 @@ describe SimpleBdd::PriorityLadder do
     it "matches the most general form" do
         subject.detect { |x| x == %w[girl joined boy for food] }.should == %w[girl joined boy for food]
     end
+
+    it "matches with 1 generalization" do
+        subject.detect { |x| x == %w[mary joined bob for food] }.should == %w[mary joined bob for food]
+        subject.detect { |x| x == %w[girl joined bob for icecream] }.should == %w[girl joined bob for icecream]
+        subject.detect { |x| x == %w[mary joined boy for icecream] }.should == %w[mary joined boy for icecream]
+    end
   end
 end
