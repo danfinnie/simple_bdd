@@ -24,5 +24,11 @@ describe SimpleBdd::PriorityLadder do
         subject.detect { |x| x == %w[girl joined bob for icecream] }.should == %w[girl joined bob for icecream]
         subject.detect { |x| x == %w[mary joined boy for icecream] }.should == %w[mary joined boy for icecream]
     end
+
+    it "matches with 2 generalizations" do
+        subject.detect { |x| x == %w[mary joined boy for food] }.should == %w[mary joined boy for food]
+        subject.detect { |x| x == %w[girl joined boy for icecream] }.should == %w[girl joined boy for icecream]
+        subject.detect { |x| x == %w[girl joined bob for food] }.should == %w[girl joined bob for food]
+    end
   end
 end

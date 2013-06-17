@@ -5,7 +5,7 @@ module SimpleBdd
     end
 
     def detect &blk
-      [@specific_array, *one_generality_array, general_array].detect(&blk)
+      [@specific_array, *one_generality_array, *two_generality_array, general_array].detect(&blk)
     end
 
     private
@@ -24,6 +24,28 @@ module SimpleBdd
           nil
         end
       end.compact
+    end
+
+    def two_generality_array
+      x = 0.upto(@specific_array.size-2).map do |i|
+        term_1 = @specific_array[i]
+        generalization_1 = @generalizations[term_1.to_sym]
+
+        (i+1).upto(@specific_array.size-1).map do |j|
+          term_2 = @specific_array[j]
+          generalization_2 = @generalizations[term_2.to_sym]
+          if generalization_1 && generalization_2
+            @specific_array[0...i] +
+              [generalization_1] +
+              @specific_array[(i+1)...j] +
+              [generalization_2] +
+              @specific_array[(j+1)..-1]
+          else
+            nil
+          end
+        end
+      end
+      x.flatten(1).uniq.compact
     end
   end
 end
