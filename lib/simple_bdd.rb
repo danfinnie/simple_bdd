@@ -1,6 +1,5 @@
 require "simple_bdd/version"
-require "simple_bdd/core"
-require "simple_bdd/named_nouns"
+require "simple_bdd/priority_ladder"
 
 module SimpleBdd
   def self.included(base)
