@@ -13,16 +13,12 @@ module SimpleBdd
     private
 
     def generalize(arr, &blk)
-      idx_generalize = arr.find_index { |term| @generalizations.has_key? term.to_sym }
-
-      if !idx_generalize
-        if arr.length > 0
-          blk[[arr]]
-        else
-          blk[[]]
-        end
+      if arr.nil? || arr.empty?
+        blk[[]]
         return
       end
+
+      idx_generalize = arr.find_index { |term| @generalizations.has_key? term.to_sym }
 
       first_bit = arr[0...idx_generalize]
       second_bit = arr[(idx_generalize+1)..-1]
