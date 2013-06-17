@@ -5,10 +5,28 @@ module SimpleBdd
     end
 
     def detect &blk
-      [@specific_array, *one_generality_array, *two_generality_array, general_array].detect(&blk)
+      generalize(@specific_array).detect(&blk)
     end
 
     private
+
+    def generalize(arr)
+      ret = []
+      idx_generalize = arr.find_index { |term| @generalizations.has_key? term.to_sym }
+
+      return [arr] unless idx_generalize
+
+      first_bit = arr[0...idx_generalize]
+      second_bit = arr[(idx_generalize+1)..-1]
+      term = arr[idx_generalize]
+      generalized_term = @generalizations[term.to_sym]
+      generalize(second_bit).each do |generalized_second_bit|
+        ret << (first_bit + [term] + generalized_second_bit)
+        ret << (first_bit + [generalized_term] + generalized_second_bit)
+      end
+
+      ret
+    end
 
     def general_array
       @specific_array.map { |term| @generalizations[term.to_sym] || term }
