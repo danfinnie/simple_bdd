@@ -30,5 +30,12 @@ describe SimpleBdd::PriorityLadder do
         subject.detect { |x| x == %w[girl joined boy for icecream] }.should == %w[girl joined boy for icecream]
         subject.detect { |x| x == %w[girl joined bob for food] }.should == %w[girl joined bob for food]
     end
+
+    it "matches in priority order" do
+        subject.detect { |x| x[0] == "mary" }.should == arr
+        subject.detect { |x| x[2] == "bob" }.should == arr
+        subject.detect { |x| x[-1] == "icecream" }.should == arr
+        subject.detect { |x| x[0] == "girl" && x[-1] == "food" }.should == %w[girl joined bob for food]
+    end
   end
 end
