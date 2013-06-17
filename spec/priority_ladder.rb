@@ -1,25 +1,26 @@
 require 'spec_helper'
 
 describe SimpleBdd::PriorityLadder do
-  let(:subject) { SimpleBdd::PriorityLadder.new(arr, names) }
+  let(:subject) { SimpleBdd::PriorityLadder.new(terms, names) }
 
-  let(:arr) { %w[mary joined bob for icecream] }
+  let(:names) { {
+    mary: "girl",
+    bob: "boy",
+    icecream: "food"
+  } }
 
   describe "#detect" do
 
-    context "lowercase names" do
-        let(:names) { {
-          mary: "girl",
-          bob: "boy",
-          icecream: "food"
-        } }
+    context "lowercase terms" do
+
+        let(:terms) { %w[mary joined bob for icecream] }
 
         it "can handle not matching anything" do
             subject.detect { false }.should be_nil
         end
 
         it "matches the original" do
-            subject.detect { |x| x == arr }.should == arr
+            subject.detect { |x| x == terms }.should == terms
         end
 
         it "matches the most general form" do
@@ -39,12 +40,19 @@ describe SimpleBdd::PriorityLadder do
         end
 
         it "matches in priority order" do
-            subject.detect { |x| x[0] == "mary" }.should == arr
-            subject.detect { |x| x[2] == "bob" }.should == arr
-            subject.detect { |x| x[-1] == "icecream" }.should == arr
+            subject.detect { |x| x[0] == "mary" }.should == terms
+            subject.detect { |x| x[2] == "bob" }.should == terms
+            subject.detect { |x| x[-1] == "icecream" }.should == terms
             subject.detect { |x| x[0] == "girl" && x[-1] == "food" }.should == %w[girl joined bob for food]
         end
     end
 
+    context "toggle case array" do
+        let(:terms) { %w[MARY joined bOb for ICEcream] }
+
+        it "performs the generalizations and preserves case" do
+            subject.detect { |x| x == %w[girl joined boy for ICEcream] }.should == %w[girl joined boy for ICEcream]
+        end
+    end
   end
 end
