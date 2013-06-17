@@ -14,5 +14,9 @@ describe SimpleBdd::PriorityLadder do
     it "matches the original" do
         subject.detect { |x| x == arr }.should == arr
     end
+
+    it "matches the most general form" do
+        subject.detect { |x| x == %w[girl joined boy for food] }.should == %w[girl joined boy for food]
+    end
   end
 end
